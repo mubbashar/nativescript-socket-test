@@ -4,7 +4,7 @@ import {SocketIO} from 'nativescript-socketio';
 import {Config} from "../config";
 
 @Injectable()
-export class SocketClass {
+export class SocketService {
 
     private static _socket:SocketIO = null
     private uuid:any = null;
@@ -13,31 +13,31 @@ export class SocketClass {
     private token:any = null;
 
     constructor() {
-        global.tnsconsole.log('SocketClass > constructor')
+        global.tnsconsole.log('SocketService > constructor')
     }
 
     getSocket():SocketIO {
-        return SocketClass._socket
+        return SocketService._socket
     }
 
     connect() {
-        if (SocketClass._socket) {
-            SocketClass._socket.connect()
+        if (SocketService._socket) {
+            SocketService._socket.connect()
         }
     }
 
     disconnect() {
-        if (SocketClass._socket) {
-            SocketClass._socket.disconnect()
+        if (SocketService._socket) {
+            SocketService._socket.disconnect()
         }
     }
 
     start() {
         global.tnsconsole.info('Socket > start')
 
-        if (SocketClass._socket) {
-            global.tnsconsole.error('SocketClass._socket > EXISTS')
-            SocketClass._socket.connect()
+        if (SocketService._socket) {
+            global.tnsconsole.error('SocketService._socket > EXISTS')
+            SocketService._socket.connect()
             return
         }
 
@@ -61,13 +61,13 @@ export class SocketClass {
             opts.query = 'creds=' + creds
         }
 
-        SocketClass._socket = new SocketIO(Config.socketUrl, opts)
+        SocketService._socket = new SocketIO(Config.socketUrl, opts)
 
-        SocketClass._socket.on('connect', function (response) {
+        SocketService._socket.on('connect', function (response) {
             global.tnsconsole.log('socket > connect')
         })
 
-        SocketClass._socket.on('data', function (response) {
+        SocketService._socket.on('data', function (response) {
             if (application.ios) {
                 global.tnsconsole.log('socket > data', response.description)
             } else if (application.android) {
@@ -75,7 +75,7 @@ export class SocketClass {
             }
         })
 
-        SocketClass._socket.on('disconnect', function (response) {
+        SocketService._socket.on('disconnect', function (response) {
             if (application.ios) {
                 global.tnsconsole.log('socket > disconnect', response.description)
             } else if (application.android) {
@@ -83,7 +83,7 @@ export class SocketClass {
             }
         })
 
-        SocketClass._socket.on('reconnect_attempt', function (response) {
+        SocketService._socket.on('reconnect_attempt', function (response) {
             if (application.ios) {
                 global.tnsconsole.log('socket > reconnect_attempt', response.description)
             } else if (application.android) {
@@ -91,7 +91,7 @@ export class SocketClass {
             }
         })
 
-        SocketClass._socket.on('error', function (error) {
+        SocketService._socket.on('error', function (error) {
             if (application.ios) {
                 global.tnsconsole.error('socket > error', error.description)
             } else if (application.android) {
@@ -99,22 +99,22 @@ export class SocketClass {
             }
         })
 
-        SocketClass._socket.connect()
+        SocketService._socket.connect()
     }
 
     destroy() {
-        if (SocketClass._socket) {
-            SocketClass._socket.disconnect()
+        if (SocketService._socket) {
+            SocketService._socket.disconnect()
             if (application.ios) {
-                SocketClass._socket.instance.removeAllHandlers()
+                SocketService._socket.instance.removeAllHandlers()
             } else if (application.android) {
-                SocketClass._socket.instance.close()
+                SocketService._socket.instance.close()
             }
-            SocketClass._socket = null
-            global.tnsconsole.warn('SocketClass._socket > DESTROYED')
+            SocketService._socket = null
+            global.tnsconsole.warn('SocketService._socket > DESTROYED')
         }
     }
 
 }
 
-export const SocketService:SocketClass = new SocketClass()
+//export const SocketService:SocketService = new SocketService()
