@@ -50,7 +50,10 @@ export class LoginComponent implements OnInit {
 
     }
     connectSocket(){
-        const opts = {};
+        //const opts = {};
+        let opts: any = {
+            path: '',
+        }
         console.log( Config.socketUrl );
         const _socket = new SocketIO(Config.socketUrl , opts )
 
@@ -59,6 +62,7 @@ export class LoginComponent implements OnInit {
         });
         console.log( 'here connect' );
         console.log( _socket.connect() );
+        _socket.emit('init',{});
     }
 
     ngOnInit() {
